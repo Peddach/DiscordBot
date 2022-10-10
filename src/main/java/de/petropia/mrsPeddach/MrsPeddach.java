@@ -32,17 +32,7 @@ public class MrsPeddach {
             configPath = file.getPath();
         }
         if(configPath == null){ //when there is no config, one will be created from the resources
-            System.err.println("No config provided! Copy default config");
-            try(InputStream resource = MrsPeddach.class.getResourceAsStream("bot.properties")){
-                if(resource == null){
-                    System.err.println("Cant find config in jar!");
-                    return;
-                }
-                Files.copy(resource, Path.of(workdir.getPath()));
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+            System.err.println("No config provided!");
             return;
         }
         new MrsPeddach(configPath);
