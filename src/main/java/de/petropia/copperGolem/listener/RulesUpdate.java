@@ -1,6 +1,6 @@
-package de.petropia.mrsPeddach.listener;
+package de.petropia.copperGolem.listener;
 
-import de.petropia.mrsPeddach.MrsPeddach;
+import de.petropia.copperGolem.CopperGolem;
 import org.javacord.api.entity.channel.PrivateChannel;
 import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.channel.ServerTextChannel;
@@ -39,9 +39,9 @@ public class RulesUpdate implements MessageCreateListener {
             return;
         }
         User user = userOptional.get();
-        List<String> allowedRoles = Arrays.asList(MrsPeddach.getInstance().getProperties().getProperty("RulesUpdateRoles").split(","));
+        List<String> allowedRoles = Arrays.asList(CopperGolem.getInstance().getProperties().getProperty("RulesUpdateRoles").split(","));
         AtomicBoolean isPermitted = new AtomicBoolean(false);
-        for (Role role : MrsPeddach.getInstance().getServer().getRoles(user)) {
+        for (Role role : CopperGolem.getInstance().getServer().getRoles(user)) {
             allowedRoles.forEach(id -> {
                 if (id.equalsIgnoreCase(role.getIdAsString())) {
                     isPermitted.set(true);
@@ -56,8 +56,8 @@ public class RulesUpdate implements MessageCreateListener {
             user.sendMessage("Bitte hänge eine markdown Datei an!");
             return;
         }
-        String rulesChannelID = MrsPeddach.getInstance().getProperties().getProperty("RulesChannel");
-        Optional<ServerChannel> optionalChannel = MrsPeddach.getInstance().getServer().getChannelById(rulesChannelID);
+        String rulesChannelID = CopperGolem.getInstance().getProperties().getProperty("RulesChannel");
+        Optional<ServerChannel> optionalChannel = CopperGolem.getInstance().getServer().getChannelById(rulesChannelID);
         if (optionalChannel.isEmpty()) {
             event.getChannel().sendMessage("Der Regel Channel wurde nicht gesetzt in der Config oder existiert nicht (mehr)! Bitte informiere einen Dev");
             return;
@@ -94,6 +94,7 @@ public class RulesUpdate implements MessageCreateListener {
                 }
             }
             user.sendMessage("Die Regeln wurden erfolgreich geupdated!");
+            RulesAccept.reload();
         });
     }
 

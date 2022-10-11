@@ -1,3 +1,3 @@
 #!/bin/bash
-chmod +x bin/MrsPeddach
-screen -dmS "MrsPeddach" bash bin/MrsPeddach
+chmod +x bin/CopperGolem
+screen -dmS "DiscordBot" bash bin/CopperGolem

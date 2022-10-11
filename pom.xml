@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.petropia.mrspeddach</groupId>
-    <artifactId>MrsPeddach</artifactId>
+    <groupId>de.petropia.copperGolem</groupId>
+    <artifactId>CopperGolem</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -37,8 +37,8 @@
                 <configuration>
                     <programs>
                         <program>
-                            <mainClass>de.petropia.mrsPeddach.MrsPeddach</mainClass>
-                            <id>MrsPeddach</id>
+                            <mainClass>de.petropia.copperGolem.CopperGolem</mainClass>
+                            <id>CopperGolem</id>
                         </program>
                     </programs>
                     <binFolder>bin</binFolder>

@@ -1,3 +1,3 @@
-title MrsPeddach
-call bin\MrsPeddach.bat
+title CopperGolem
+call bin\CopperGolem.bat
 pause

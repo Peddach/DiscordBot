@@ -1,20 +1,19 @@
-package de.petropia.mrsPeddach;
+package de.petropia.copperGolem;
 
-import de.petropia.mrsPeddach.listener.RulesUpdate;
+import de.petropia.copperGolem.listener.RulesAccept;
+import de.petropia.copperGolem.listener.RulesUpdate;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.UserStatus;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Properties;
 
-public class MrsPeddach {
+public class CopperGolem {
 
-    private static MrsPeddach instance;
+    private static CopperGolem instance;
     private final DiscordApi API;
     private final Properties properties;
     private final Server server;
@@ -35,28 +34,32 @@ public class MrsPeddach {
             System.err.println("No config provided!");
             return;
         }
-        new MrsPeddach(configPath);
+        new CopperGolem(configPath);
     }
 
-    public MrsPeddach(String configPath) throws IOException, NullPointerException {
+    public CopperGolem(String configPath) throws IOException, NullPointerException {
         instance = this;
         properties = new Properties();
         properties.load(new FileInputStream(configPath));
         String token = String.valueOf(properties.getProperty("Token"));
         API = new DiscordApiBuilder()
                 .setToken(token)
+                .setAllIntents()
+                .setWaitForUsersOnStartup(true)
                 .login().join();
         API.updateActivity("Petropia");
         API.updateStatus(UserStatus.ONLINE);
         this.server = API.getServerById(properties.getProperty("Server")).orElseThrow();
+        RulesAccept.reload();
         registerListener();
     }
 
     private void registerListener(){
         API.addListener(new RulesUpdate());
+        API.addReactionAddListener(new RulesAccept());
     }
 
-    public static MrsPeddach getInstance(){
+    public static CopperGolem getInstance(){
         return instance;
     }
 
