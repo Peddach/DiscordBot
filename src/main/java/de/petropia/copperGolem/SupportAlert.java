@@ -61,6 +61,22 @@ public class SupportAlert extends Thread {
                     .setDescription("Leider konnte kein Supporter erreicht werden. Das bedeutet, dass es eventuell etwas länger dauert bis dir geholfen wird.")
                     .setColor(Color.RED)
                     .setFooter(CopperGolem.getInstance().getAPI().getYourself().getName() + " by Petropia"));
+            Optional<Role> mods = CopperGolem.getInstance().getServer().getRoleById(CopperGolem.getInstance().getProperties().getProperty("ModRole"));
+            if(mods.isEmpty()){
+                System.out.println("ModRole not set!");
+                return;
+            }
+            mods.get().getUsers().forEach(mod -> {
+                if(mod.getStatus() != UserStatus.ONLINE){
+                    return;
+                }
+                mod.sendMessage(new EmbedBuilder()
+                        .setTitle("Support")
+                        .setDescription("Ein Nutzer wartet schon läger als " + delay + " Minuten und es ist ***kein*** Supporter online!")
+                        .setColor(Color.RED)
+                        .setAuthor(user)
+                        .setFooter(CopperGolem.getInstance().getAPI().getYourself().getName() + " by Petropia"));
+            });
         });
     }
 }
