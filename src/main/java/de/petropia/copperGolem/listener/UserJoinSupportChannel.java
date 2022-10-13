@@ -14,14 +14,15 @@ public class UserJoinSupportChannel implements ServerVoiceChannelMemberJoinListe
         if(!event.getChannel().getIdAsString().equalsIgnoreCase(CopperGolem.getInstance().getProperties().getProperty("SupportWaitingChannel"))){
             return;
         }
-        if(event.getChannel().getConnectedUsers().size() != 1){
-            return;
-        }
-        new SupportAlert(event.getUser().getId(), Integer.parseInt(CopperGolem.getInstance().getProperties().getProperty("SupportAlertDelay"))).start();
         event.getUser().sendMessage(new EmbedBuilder()
                 .setTitle("Support")
                 .setDescription("Danke, dass du dich an den Support des Petropia.de Netzwerks wendest :star_struck:. Bitte gedulde dich in dem Support Warteraum einen Moment bis der nächste freie Supporter sich um dich kümmert :clock1:")
+                .addInlineField("Wie mache ich die Musik aus? :mute:", "Um die Musik stumm zu schalten, mache einen Rechtsklick auf mich und klicke das Kästchen \"Stummschalten\" an")
                 .setColor(Color.GREEN)
                 .setFooter(CopperGolem.getInstance().getAPI().getYourself().getName() + " by Petropia"));
+        if(event.getChannel().getConnectedUsers().size() != 2){
+            return;
+        }
+        new SupportAlert(event.getUser().getId(), Integer.parseInt(CopperGolem.getInstance().getProperties().getProperty("SupportAlertDelay"))).start();
     }
 }

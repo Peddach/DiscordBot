@@ -1,5 +1,6 @@
 package de.petropia.copperGolem;
 
+import de.petropia.copperGolem.audio.WaitingMusic;
 import de.petropia.copperGolem.listener.RulesAccept;
 import de.petropia.copperGolem.listener.RulesUpdate;
 import de.petropia.copperGolem.listener.UserJoinSupportChannel;
@@ -53,6 +54,7 @@ public class CopperGolem {
         this.server = API.getServerById(properties.getProperty("Server")).orElseThrow();
         RulesAccept.reload();
         registerListener();
+        new WaitingMusic();
     }
 
     /**

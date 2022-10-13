@@ -47,7 +47,7 @@ public class SupportAlert extends Thread {
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Support")
                     .setDescription("Ein nutzer wartet im Support Warteraum seit " + delay + " Minuten!")
-                    .addInlineField("Anzahl Warteraum", String.valueOf(channel.get().getConnectedUserIds().size()))
+                    .addInlineField("Anzahl Warteraum", String.valueOf(channel.get().getConnectedUserIds().size() - 1))
                     .addInlineField("Supporter online", String.valueOf(onlineSupporter.size()))
                     .setAuthor(user)
                     .setFooter(CopperGolem.getInstance().getAPI().getYourself().getName() + " by Petropia")
