@@ -43,6 +43,7 @@ public class WaitingMusic {
             this.playerManager = new DefaultAudioPlayerManager();
             playerManager.registerSourceManager(new LocalAudioSourceManager());
             audioPlayer = playerManager.createPlayer();
+            audioPlayer.setVolume(Integer.parseInt(CopperGolem.getInstance().getProperties().getProperty("Volume")));
             audioPlayer.addListener(new CopperAudioEventAdapter()); //Add an Event handler in to repeat songs and so on
             //Creating an audio source and playing it in the audioConnection
             AudioSource source = new CopperLavaPlayerAudioSource(CopperGolem.getInstance().getAPI(), audioPlayer);
