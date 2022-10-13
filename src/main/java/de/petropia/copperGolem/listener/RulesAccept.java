@@ -25,13 +25,13 @@ public class RulesAccept implements ReactionAddListener {
         if (!event.getChannel().getIdAsString().equalsIgnoreCase(CopperGolem.getInstance().getProperties().getProperty("RulesChannel"))) {
             return;
         }
-        if(event.getUserId() == CopperGolem.getInstance().getAPI().getYourself().getId()) return;
+        if (event.getUserId() == CopperGolem.getInstance().getAPI().getYourself().getId()) return;
         event.removeReaction();
         Optional<Message> reactedMessage = event.getMessage();
         Optional<User> user = event.getUser();
         Optional<Reaction> reaction = event.getReaction();
         Optional<Role> acceptRole = CopperGolem.getInstance().getServer().getRoleById(CopperGolem.getInstance().getProperties().getProperty("RuleAcceptRole"));
-        if(reactedMessage.isEmpty() || reaction.isEmpty() || user.isEmpty() || acceptRole.isEmpty()) return;
+        if (reactedMessage.isEmpty() || reaction.isEmpty() || user.isEmpty() || acceptRole.isEmpty()) return;
         if (!reactedMessage.get().getIdAsString().equalsIgnoreCase(reationMessageId)) return;
         if (!reaction.get().getEmoji().equalsEmoji("✅")) return;
         user.get().addRole(acceptRole.get()).exceptionally(ExceptionLogger.get());
@@ -43,18 +43,25 @@ public class RulesAccept implements ReactionAddListener {
     public static void reload() {
         Optional<ServerTextChannel> channel = CopperGolem.getInstance().getServer().getTextChannelById(CopperGolem.getInstance().getProperties().getProperty("RulesChannel"));
         if (channel.isEmpty()) return;
-        channel.get().getMessageById(reationMessageId).thenAccept(Message::delete).whenComplete((unused, throwable) -> channel.get().sendMessage(new EmbedBuilder()
-                .setTitle("Regeln")
-                .setColor(Color.GREEN)
-                .setDescription("Bitte akzeptiere die Regeln, indem du mit :white_check_mark: regierst")).thenAccept(message -> {
+        channel.get().getMessageById(reationMessageId).thenAccept(message -> {
+            message.removeAllReactions().thenAccept(unused -> message.addReaction("✅"));
             reationMessageId = message.getIdAsString();
-            CopperGolem.getInstance().getProperties().setProperty("CurrentAcceptMessage", message.getIdAsString());
-            try {
-                CopperGolem.getInstance().getProperties().store(new FileOutputStream("bot.properties"), null);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            message.addReaction("✅").exceptionally(ExceptionLogger.get());
-        }));
+        }).exceptionally(throwable -> {
+            channel.get().sendMessage(new EmbedBuilder()
+                    .setTitle("Regeln")
+                    .setColor(Color.GREEN)
+                    .setDescription("Bitte akzeptiere die Regeln, indem du mit :white_check_mark: regierst")).thenAccept(message -> {
+                reationMessageId = message.getIdAsString();
+                CopperGolem.getInstance().getProperties().setProperty("CurrentAcceptMessage", message.getIdAsString());
+                try {
+                    CopperGolem.getInstance().getProperties().store(new FileOutputStream("bot.properties"), null);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                message.addReaction("✅").exceptionally(ExceptionLogger.get());
+            });
+            System.out.println("The old reaction message was deleted or not found!");
+            return null;
+        });
     }
 }
