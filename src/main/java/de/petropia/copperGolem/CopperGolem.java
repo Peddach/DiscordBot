@@ -1,9 +1,9 @@
 package de.petropia.copperGolem;
 
 import de.petropia.copperGolem.audio.WaitingMusic;
-import de.petropia.copperGolem.listener.RulesAccept;
-import de.petropia.copperGolem.listener.RulesUpdate;
-import de.petropia.copperGolem.listener.UserJoinSupportChannel;
+import de.petropia.copperGolem.listener.*;
+import de.petropia.copperGolem.tickets.TicketCreateButton;
+import de.petropia.copperGolem.tickets.TicketDatabase;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.server.Server;
@@ -52,7 +52,13 @@ public class CopperGolem {
         API.updateActivity("Petropia");
         API.updateStatus(UserStatus.ONLINE);
         this.server = API.getServerById(properties.getProperty("Server")).orElseThrow();
+        if(!TicketDatabase.connect()){
+            System.err.println("Can't connect to DB!");
+            return;
+        }
+        TicketDatabase.createTablesIfNotExist();
         RulesAccept.reload();
+        TicketCreateButton.reload();
         registerListener();
         new WaitingMusic();
     }
@@ -64,6 +70,8 @@ public class CopperGolem {
         API.addListener(new RulesUpdate());
         API.addReactionAddListener(new RulesAccept());
         API.addServerVoiceChannelMemberJoinListener(new UserJoinSupportChannel());
+        API.addModalSubmitListener(new TicketChooseListener());
+        API.addInteractionCreateListener(new TicketClaimListener());
     }
 
     public static CopperGolem getInstance(){
