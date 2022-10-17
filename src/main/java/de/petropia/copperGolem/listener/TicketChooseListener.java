@@ -36,17 +36,17 @@ public class TicketChooseListener implements SelectMenuChooseListener, ModalSubm
         SelectMenuOption option = event.getSelectMenuInteraction().getChosenOptions().get(0);
         if (option.getLabel().equalsIgnoreCase(TicketLabels.BUG_REPORT.label())) {
             event.getInteraction().respondWithModal("TicketChooseModal", "Bug Melden",
-                    ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "TicketChooseModalResponse_Bug", "Beschreibe kurz den Bug")));
+                    ActionRow.of(TextInput.create(TextInputStyle.SHORT, "TicketChooseModalResponse_Bug", "Beschreibe kurz den Bug")));
             return;
         }
         if (option.getLabel().equalsIgnoreCase(TicketLabels.PLAYER_REPORT.label())) {
             event.getInteraction().respondWithModal("TicketChooseModal", "Spieler Melden",
-                    ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "TicketChooseModalResponse_Player", "Beschreibe das Fehlverhalten kurz")));
+                    ActionRow.of(TextInput.create(TextInputStyle.SHORT, "TicketChooseModalResponse_Player", "Beschreibe das Fehlverhalten kurz")));
             return;
         }
         if (option.getLabel().equalsIgnoreCase(TicketLabels.OTHER.label())) {
             event.getInteraction().respondWithModal("TicketChooseModal", "Sonstiges",
-                    ActionRow.of(TextInput.create(TextInputStyle.PARAGRAPH, "TicketChooseModalResponse_Other", "Beschreibe kurz dein Anliegen")));
+                    ActionRow.of(TextInput.create(TextInputStyle.SHORT, "TicketChooseModalResponse_Other", "Beschreibe kurz dein Anliegen")));
             return;
         }
         event.getInteraction().createImmediateResponder().setContent("Etwas ist schief gelaufen!").setFlags(MessageFlag.EPHEMERAL).respond();

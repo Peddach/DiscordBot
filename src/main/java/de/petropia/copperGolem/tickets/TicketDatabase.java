@@ -25,7 +25,8 @@ public class TicketDatabase {
     private static final String HAS_USER_OPEN_TICKET = "SELECT * FROM tickets WHERE UserID = ?";
     private static final String ADD_TICKET = "INSERT INTO tickets (UserID, TicketChannelID, Description, Title, ClaimedBy, Status) VALUES (?, ?, ?, ?, NULL, ?)";
     private static final String CLAIM_TICKET = "UPDATE tickets SET ClaimedBy = ?, Status = '"+ TicketStatus.CLAIMED.name() +"' WHERE TicketChannelID = ?";
-
+    private static final String GET_CLAIMED_BY = "SELECT ClaimedBy FROM tickets WHERE TicketChannelID = ?";
+    private static final String DELETE_TICKET = "DELETE FROM tickets WHERE TicketChannelID = ?";
     public static boolean connect(){
         Properties properties = CopperGolem.getInstance().getProperties();
         String password = properties.getProperty("DatabasePassword");
@@ -94,11 +95,37 @@ public class TicketDatabase {
         });
     }
 
+    public static CompletableFuture<String> getClaimedBy(String ticketChannelID){
+        return CompletableFuture.supplyAsync(() -> {
+            try(Connection connection = dataSource.getConnection(); PreparedStatement statement = connection.prepareStatement(GET_CLAIMED_BY)){
+                statement.setString(1, ticketChannelID);
+                ResultSet resultSet = statement.executeQuery();
+                resultSet.next();
+                String result = resultSet.getString(1);
+                resultSet.close();
+                return result;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
     public static void setTicketClaimed(String ticketChannelID, String claimedUserID){
         new Thread(() -> {
             try(Connection connection = dataSource.getConnection(); PreparedStatement statement = connection.prepareStatement(CLAIM_TICKET)){
                 statement.setString(1, claimedUserID);
                 statement.setString(2, ticketChannelID);
+                statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public static void deleteTicket(String ticketChannelID){
+        new Thread(() -> {
+            try(Connection connection = dataSource.getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_TICKET)){
+                statement.setString(1, ticketChannelID);
                 statement.execute();
             } catch (SQLException e) {
                 e.printStackTrace();

@@ -1,6 +1,8 @@
 package de.petropia.copperGolem;
 
 import de.petropia.copperGolem.audio.WaitingMusic;
+import de.petropia.copperGolem.commands.AddCommand;
+import de.petropia.copperGolem.commands.CloseCommand;
 import de.petropia.copperGolem.listener.*;
 import de.petropia.copperGolem.tickets.TicketCreateButton;
 import de.petropia.copperGolem.tickets.TicketDatabase;
@@ -59,6 +61,8 @@ public class CopperGolem {
         TicketDatabase.createTablesIfNotExist();
         RulesAccept.reload();
         TicketCreateButton.reload();
+        AddCommand.init();
+        CloseCommand.init();
         registerListener();
         new WaitingMusic();
     }
@@ -72,6 +76,8 @@ public class CopperGolem {
         API.addServerVoiceChannelMemberJoinListener(new UserJoinSupportChannel());
         API.addModalSubmitListener(new TicketChooseListener());
         API.addInteractionCreateListener(new TicketClaimListener());
+        API.addInteractionCreateListener(new AddCommand());
+        API.addInteractionCreateListener(new CloseCommand());
     }
 
     public static CopperGolem getInstance(){
