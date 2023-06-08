@@ -88,11 +88,18 @@ public class TicketChooseListener implements SelectMenuChooseListener, ModalSubm
             channel.createUpdater().addPermissionOverwrite(user, permissions).update();
             EmbedBuilder embed = new EmbedBuilder()
                     .setTitle("Support")
-                    .setDescription("Hey " + user.getName() + ". Danke, dass du dich an uns wendest! Bitte beschreibe in diesem Channel möglichst detailiert dei Anliegen.")
+                    .setDescription("Hey " + CopperGolem.getInstance().getServer().getNickname(user).orElse(user.getName()) + ":wave:. Danke, dass du dich an uns wendest! Bitte beschreibe in diesem Channel möglichst detailliert dein Anliegen.")
                     .setTimestampToNow()
                     .setColor(Color.ORANGE)
                     .setFooter(CopperGolem.getInstance().getAPI().getYourself().getName() + " by Petropia");
             new MessageBuilder().append(user).addEmbed(embed).send(channel);
+            EmbedBuilder embed2 = new EmbedBuilder()
+                    .setTitle("Anliegen von " + CopperGolem.getInstance().getServer().getNickname(user).orElse(user.getName()) + ":")
+                    .setDescription(description)
+                    .setTimestampToNow()
+                    .setColor(Color.ORANGE)
+                    .setFooter(CopperGolem.getInstance().getAPI().getYourself().getName() + " by Petropia");
+            new MessageBuilder().addEmbed(embed2).send(channel);
             TicketDatabase.createTicket(user.getIdAsString(), channel.getIdAsString(), description, title);
             sendMessageToSupporter(user, description, title, channel.getIdAsString());
         });
@@ -106,7 +113,7 @@ public class TicketChooseListener implements SelectMenuChooseListener, ModalSubm
         new MessageBuilder().addEmbed(new EmbedBuilder()
                         .setColor(Color.RED)
                         .setFooter(CopperGolem.getInstance().getAPI().getYourself().getName() + " by Petropia")
-                        .setDescription("Der Nutzer " + user.getName() + " hat ein neues Ticket erstellt.")
+                        .setDescription("Der Nutzer " + CopperGolem.getInstance().getServer().getNickname(user).orElse(user.getName()) + " (" + user.getDiscriminatedName() + ") hat ein neues Ticket erstellt.")
                         .addField("Ticket Typ", ticketType)
                         .addField("Beschreibung", description)
                         .addField("Datum", date())
